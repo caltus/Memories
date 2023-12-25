@@ -1,0 +1,219 @@
+alias icecho {
+  set %echotxt $parms 
+  echo -a 10[14IRCop10] %echotxt 
+}
+menu nicklist {
+  -
+  -=[ IRCop 3.0 ]=-
+  .Advertise:/me 8,4Is using -=[ IRCop 3.0 ]=- By: SeneBirt 
+  .Find EggDrops in Channel:/privmsg # ./raw : NOTICE $1 :PING IrcOp 3.0 By: SeneBirt
+  .Give yourself IRCop:/oper $me $$?="Enter Password for IRCop"  | /mode $me +Aacbkhi
+  .Silence user 
+  ..Add:/silence $$1
+  ..Remove:/silence -$$1
+  .User Server Commands
+  ..Channel Bans (SaMode)
+  ...Ban *!*@*domain:/samode # +b $* 4
+  ...Ban *!*user@*.domain:/samode # +b $* 3
+  ...Ban *!*@host.domain:/samode # +b $* 2
+  ...Ban *!*user@host.domain:/samode # +b $* 1
+  ...Ban nick!*user@host.domain:/samode # +b $*
+  ...Ban nick!*@*:/samode # +b $* $+ !*@*
+  ..-
+  ..Op:/samode # +o $$1
+  ..Deop:/samode # -o $$1
+  ..Voice:/samode # +v $$1
+  ..UnVoice:/samode # -v $$1
+  ..Custom Modes:/mode $$1 $$?="Enter Command"
+  ..TakeOver:{ if ($me !isop #) err1 | set %i 0 | :start | inc %i | if ($snick(#,%i) == $null) { iecho Kicked selected nicks from $hc(#) $+ . | halt } | if ($snick(#,%i) == $me) goto start | .quote kill $snick(#,%i) : $+ %msk | goto start }
+  .OperServ
+  ..Mode:/privmsg operserv mode # $$?="Enter Mode" $$1
+  ..Kick User:/privmsg operserv kick # $$1 $$?="Enter Reason"
+  ..Global:/privmsg operserv global $$?="Enter Message"
+  ..Qline:/privmsg operserv qline $$1
+  ..Unqline:/privmsg operserv unqline $$?"Enter Nick"
+  ..Kill:/privmsg operserv kill $$1 $$?="Enter Reason"
+  ..Jupe:/privmsg operserv Jupe $$?="Enter Server"
+  ..Update:/privmsg operserv update
+  .Raw
+  ..Fake Server
+  ...Run Server:/privmsg operserv raw server %fakeserver : $+ %fakeabout
+  ...Server:/set %fakeserver $$?="Enter Fake Server" | icecho Fake Server is now %fakeserver 
+  ...About:/set %fakeabout $$?="Enter Fake About Server" | icecho Fake About Server is now %fakeabout 
+  ...Take Down:/squit %fakeserver
+  ..Fake Person
+  ...Commands
+  ....Join Chan:/privmsg operserv raw : $+ %fakenick join # :
+  ....Part Chan:/privmsg operserv raw : $+ %fakenick part # :
+  ....Kick User:/privmsg operserv raw : $+ %fakenick kick # $$1 : $+ $$?="Enter Reason"
+  ....Kick/Ban:/privmsg operserv raw : $+ %fakenick mode # +b $$1  |  /privmsg operserv raw : $+ %fakenick kick # $$1 : $+ $$?="Enter Reason"
+  ....Unban:/privmsg operserv raw : $+ %fakenick mode # -b $$?="Enter Banned Hostname"
+  ....Op:/privmsg operserv raw : $+ %fakenick mode # +o $$1 :
+  ....Deop:/privmsg operserv raw : $+ %fakenick mode # -o $$1 :
+  ....Voice:/privmsg operserv raw : $+ %fakenick mode # +v $$1 :
+  ....DeVoice:/privmsg operserv raw : $+ %fakenick mode # -v $$1
+  ....Talk:/privmsg operserv raw : $+ %fakenick privmsg # : $+ $$?="What do you want to say?"
+  ....Action:/privmsg operserv raw : $+ %fakenick privmsg # : $+  ACTION $$?="Enter Mesage" $+ 
+  ....MsgUser:/privmsg operserv raw : $+ %fakenick privmsg $$1 : $+ $$?="Enter Message"
+  ....Nick:/set %fakenick $$?="Enter New Nick"  |  /privmsg operserv raw : $+ %fakenick nick %fakenick  | icecho Fake Person Nick now set to %fakenick
+  ....Away %fakeaway $+ : {
+    if (%fakeaway == no) { 
+      privmsg operserv raw : $+ %fakenick away : $+ $?="Enter Away Reason" 
+      set %fakeaway Yes 
+    } 
+    else { 
+      privmsg operserv raw : $+ %fakenick away
+      set %fakeaway No
+    } 
+  } 
+  ....Topic: { privmsg operserv raw : $+ %fakenick topic # : $+ $?="Enter New Topic" }
+  ....Disconnect:/privmsg operserv raw : $+ %fakenick quit : $+ $$?="Enter Quit Message"
+  ...Run Fake Person:/privmsg operserv raw nick %fakenick | /privmsg operserv raw : $+ %fakenick user %fakeident %fakehost %fakeserv : %fakeinfo
+  ...Nick:/set %fakenick $$?="Enter Nick" |  icecho Fake Person Nick now set to %fakenick
+  ...Ident:/set %fakeident $$?="Enter Ident" | icecho Fake Person Ident now set to %fakeident
+  ...Hostname:/set %fakehost $$?="Enter Hostname" | icecho Fake Person Hostname now set to %fakehost
+  ...NickInfo:/set %fakeinfo $$?="Enter Fake Nick Info" | icecho Fake Person Info Now set to %fakeinfo
+  ...Server:/set %fakeserv $$?="Enter Fake Server" | icecho Fake Person Server now set to %fakeserv
+  ..Kick
+  ...Kick (No Reason)
+  ....ChanServ:/privmsg operserv raw :ChanServ kick # : $+ $$1
+  ....NickServ:/privmsg operserv raw :NickServ kick # : $+ $$1
+  ....MemoServ:/privmsg operserv raw :MemoServ kick # : $+ $$1
+  ....OperServ:/privmsg operserv raw :OperServ kick # : $+ $$1
+  ....HelpServ:/privmsg operserv raw :HelpServ kick # : $+ $$1
+  ....IrcIIhelp:/privmsg operserv raw :IrcIIhelp kick # : $+ $$1
+  ....DevNull:/privmsg operserv raw :DevNull kick # : $+ $$1
+  ...Kick User (Reason)
+  ....ChanServ:/privmsg operserv raw :ChanServ kick # $$1 : $+ $$?="Enter Reason"
+  ....NickServ:/privmsg operserv raw :NickServ kick # $$1 : $+ $$?="Enter Reason"
+  ....OperServ:/privmsg operserv raw :OperServ kick # $$1 : $+ $$?="Enter Reason"
+  ....HelpServ:/privmsg operserv raw :HelpServ kick # $$1 : $+ $$?="Enter Reason"
+  ....MemoServ:/privmsg operserv raw :MemoServ kick # $$1 : $+ $$?="Enter Reason"
+  ....IrcIIHelp:/privmsg operserv raw :IrcIIhelp kick # $$1 : $+ $$?="Enter Reason"
+  ....DevNull:/privmsg operserv raw :DevNull kick # $$1 : $+ $$?="Enter Reason"
+  ..Kick/Ban 
+  ...ChanServ:/privmsg operserv raw :chanserv mode # +b : $+ $$1 | /privmsg operserv raw :ChanServ kick # $$1 : $+ $$?="Enter Reason"
+  ...OperServ:/privmsg operserv raw :operserv mode # +b : $+ $$1 | /privmsg operserv raw :operServ kick # $$1 : $+ $$?="Enter Reason"
+  ...NickServ:/privmsg operserv raw :Nickserv mode # +b : $+ $$1 | /privmsg operserv raw :nickServ kick # $$1 : $+ $$?="Enter Reason"
+  ...MemoServ:/privmsg operserv raw :memoserv mode # +b : $+ $$1 | /privmsg operserv raw :memoServ kick # $$1 : $+ $$?="Enter Reason"
+  ...IrcIIhelp:/privmsg operserv raw :irciihelp mode # +b : $+ $$1 | /privmsg operserv raw :irciihelp kick # $$1 : $+ $$?="Enter Reason"
+  ...HelpServ:/privmsg operserv raw :helpserv mode # +b : $+ $$1 | /privmsg operserv raw :helpServ kick # $$1 : $+ $$?="Enter Reason"
+  ...DevNull:/privmsg operserv raw :devnull mode # +b : $+ $$1 | /privmsg operserv raw :devnull kick # $$1 : $+ $$?="Enter Reason"
+  ..Op
+  ...ChanServ:/privmsg operserv raw :chanserv mode # +o : $+ $$1
+  ...OperServ:/privmsg operserv raw :operserv mode # +o : $+ $$1
+  ...NickServ:/privmsg operserv raw :Nickserv mode # +o : $+ $$1
+  ...MemoServ:/privmsg operserv raw :memoserv mode # +o : $+ $$1
+  ...IrcIIhelp:/privmsg operserv raw :irciihelp mode # +o : $+ $$1
+  ...HelpServ:/privmsg operserv raw :helpserv mode # +o : $+ $$1
+  ...DevNull:/privmsg operserv raw :devnull mode # +o : $+ $$1
+  ..Deop
+  ...ChanServ:/privmsg operserv raw :chanserv mode # -o : $+ $$1
+  ...OperServ:/privmsg operserv raw :operserv mode # -o : $+ $$1
+  ...NickServ:/privmsg operserv raw :Nickserv mode # -o : $+ $$1
+  ...MemoServ:/privmsg operserv raw :memoserv mode # -o : $+ $$1
+  ...IrcIIhelp:/privmsg operserv raw :irciihelp mode # -o : $+ $$1
+  ...HelpServ:/privmsg operserv raw :helpserv mode # -o : $+ $$1
+  ...DevNull:/privmsg operserv raw :devnull mode # -o : $+ $$1
+  ..UnBan
+  ...ChanServ:/privmsg operserv raw :chanserv mode # -b : $+ $$?="Enter Host"
+  ...OperServ:/privmsg operserv raw :operserv mode # -b : $+ $$?="Enter Host"
+  ...NickServ:/privmsg operserv raw :Nickserv mode # -b : $+ $$?="Enter Host"
+  ...MemoServ:/privmsg operserv raw :memoserv mode # -b : $+ $$?="Enter Host"
+  ...IrcIIhelp:/privmsg operserv raw :irciihelp mode # -b : $+ $$?="Enter Host"
+  ...HelpServ:/privmsg operserv raw :helpserv mode # -b : $+ $$?="Enter Host"
+  ...DevNull:/privmsg operserv raw :devnull mode # -b : $+ $$?="Enter Host"
+  ..Change Topic
+  ...ChanServ:/privmsg operserv raw :chanserv topic # : $+ $$?="Enter New Topic"
+  ...OperServ:/privmsg operserv raw :operserv topic # : $+ $$?="Enter New Topic"
+  ...NickServ:/privmsg operserv raw :Nickserv topic # : $+ $$?="Enter New Topic"
+  ...MemoServ:/privmsg operserv raw :memoserv topic # : $+ $$?="Enter New Topic"
+  ...IrcIIhelp:/privmsg operserv raw :irciihelp topic # : $+ $$?="Enter New Topic"
+  ...HelpServ:/privmsg operserv raw :helpserv topic # : $+ $$?="Enter New Topic"
+  ...DevNull:/privmsg operserv raw :devnull topic # : $+ $$?="Enter New Topic"
+  ..Custom Chan Modes
+  ...ChanServ:/privmsg operserv raw :chanserv mode # $$?="Enter Mode" :
+  ...OperServ:/privmsg operserv raw :operserv mode # $$?="Enter Mode" :
+  ...NickServ:/privmsg operserv raw :Nickserv mode # $$?="Enter Mode" :
+  ...MemoServ:/privmsg operserv raw :memoserv mode # $$?="Enter Mode" :
+  ...IrcIIhelp:/privmsg operserv raw :irciihelp mode # $$?="Enter Mode" :
+  ...HelpServ:/privmsg operserv raw :helpserv mode # $$?="Enter Mode" :
+  ...DevNull:/privmsg operserv raw :devnull mode # $$?="Enter Mode" :
+  ..Talk/privmsg
+  ...ChanServ:/privmsg operserv raw :ChanServ privMSG # : $+ $$?="Enter Mesage"
+  ...OperServ:/privmsg operserv raw :OperServ privMSG # : $+ $$?="Enter Message"
+  ...NickServ:/privmsg operserv raw :NickServ privMSG # : $+ $$?="Enter Message"
+  ...MemoServ:/privmsg operserv raw :Memoserv privMSG # : $+ $$?="Enter Message"
+  ...IrcIIHelp:/privmsg operserv raw :IRCIIhelp privmsg # : $+ $$?="Enter Message"
+  ...HelpServ:/privmsg operserv raw :helpserv privmsg # : $+ $$?="Enter Message"
+  ...DevNull:/privmsg operserv raw :devnull privmsg # : $+ $$?="Enter Message"
+  ..Talk/Action
+  ...ChanServ:/privmsg operserv raw :ChanServ privMSG # : $+  ACTION $$?="Enter Mesage" $+ 
+  ...OperServ:/privmsg operserv raw :OperServ privMSG # : $+  ACTION $$?="Enter Mesage" $+ 
+  ...NickServ:/privmsg operserv raw :NickServ privMSG # : $+  ACTION $$?="Enter Mesage" $+ 
+  ...MemoServ:/privmsg operserv raw :Memoserv privMSG # : $+  ACTION $$?="Enter Mesage" $+ 
+  ...IrcIIHelp:/privmsg operserv raw :IRCIIhelp privmsg # : $+  ACTION $$?="Enter Mesage" $+ 
+  ...HelpServ:/privmsg operserv raw :helpserv privmsg # : $+  ACTION $$?="Enter Mesage" $+ 
+  ...DevNull:/privmsg operserv raw :devnull privmsg # : $+  ACTION $$?="Enter Mesage" $+ 
+  ..MsgUser
+  ...ChanServ:/privmsg operserv raw :chanserv privmsg $$1 : $+ $$?="Enter Message"
+  ...OperServ:/privmsg operserv raw :OperServ privMSG $$1 : $+ $$?="Enter Message"
+  ...NickServ:/privmsg operserv raw :NickServ privMSG $$1 : $+ $$?="Enter Message"
+  ...MemoServ:/privmsg operserv raw :Memoserv privMSG $$1 : $+ $$?="Enter Message"
+  ...IrcIIHelp:/privmsg operserv raw :IRCIIhelp privmsg $$1 : $+ $$?="Enter Message"
+  ...HelpServ:/privmsg operserv raw :helpserv privmsg $$1 : $+ $$?="Enter Message"
+  ...DevNull:/privmsg operserv raw :devnull privmsg $$1 : $+ $$?="Enter Message"
+  ..Service Join/Part Chan
+  ...Join
+  ....ChanServ:/privmsg operserv raw :chanserv join # :
+  ....NickServ:/privmsg operserv raw :nickserv join # :
+  ....DevNull:/privmsg operserv raw :DevNull join # :
+  ....MemoServ:/privmsg operserv raw :memoserv join # :
+  ....HelpServ:/privmsg operserv raw :Helpserv join # :
+  ....IrcIIhelp:/privmsg operserv raw :irciihelp join # :
+  ....OperServ:/privmsg operserv raw :operserv join # :
+  ....All Join:/privmsg operserv raw :chanserv join # : | /privmsg operserv raw :nickserv join # : | /privmsg operserv raw :DevNull join # : | /privmsg operserv raw :memoserv join # : | /privmsg operserv raw :Helpserv join # : | /privmsg operserv raw :irciihelp join # : | /privmsg operserv raw :operserv join # : 
+  ...Part
+  ....ChanServ:/privmsg operserv raw :chanserv part # :
+  ....NickServ:/privmsg operserv raw :nickserv part # :
+  ....DevNull:/privmsg operserv raw :DevNull part # :
+  ....MemoServ:/privmsg operserv raw :memoserv part # :
+  ....HelpServ:/privmsg operserv raw :Helpserv part # :
+  ....IrcIIhelp:/privmsg operserv raw :irciihelp part # :
+  ....OperServ:/privmsg operserv raw :operserv part # :
+  ....All Part:/privmsg operserv raw :chanserv part # : | /privmsg operserv raw :nickserv part # : | /privmsg operserv raw :DevNull part # : | /privmsg operserv raw :memoserv part # : |  /privmsg operserv raw :Helpserv part # : | /privmsg operserv raw :irciihelp part # : | /privmsg operserv raw :operserv part # : 
+  ..Change Nick:/privmsg operserv raw :nickserv svsnick $1 $$?="Enter New Nick" :0
+  ..Change UserMode:/privmsg operserv raw :nickserv svsmode $1 $$?="Enter Modes to Change"
+  ..Quit User:/privmsg operserv raw :nickserv svskill $1 : $+ $$?="Enter Reason"
+  ..Kill:/kill $$1
+  ..Kill (why?):/kill $1 $$?="Why You want to Kill User?"
+  .Kline user
+  ..K-Line *!*user@host.domain:/kline $address($$1,1) $$?="What is the reason for the kline?"
+  ..K-Line *!*@host.domain: /kline $address($$1,2) $$?="What is the reason for the kline?"
+  ..K-Line *!*user@*.domain:/kline $address($$1,3) $$?="What is the reason for the kline?"
+  ..K-Line *!*@*.domain:/kline $address($$1,4) $$?="What is the reason for the kline?"
+  ..K-Line nick!user@host.domain:/kline $address($$1,5) $$?="What is the reason for the kline?"
+  ..K-Line nick!*user@host.domain:/kline $address($$1,6) $$?="What is the reason for the kline?"
+  ..K-Line nick!*@host.domain:/kline $address($$1,7) $$?="What is the reason for the kline?"
+  ..K-Line nick!*user@*.domain:/kline $address($$1,8) $$?="What is the reason for the kline?"
+  ..K-Line nick!*@*.domain:/kline $address($$1,9) $$?="What is the reason for the kline?"
+  .-
+  .AKill User 
+  ..AKill *!*user@host.domain:/akill $address($$1,1) $$?="What is the reason for the akill?"
+  ..AKill *!*@host.domain:/akill $address($$1,2) $$?="What is the reason for the akill?"
+  ..AKill *!*user@*.domain:/akill $address($$1,3) $$?="What is the reason for the akill?"
+  ..AKill *!*@*.domain:/akill $address($$1,4) $$?="What is the reason for the akill?"
+  ..AKill nick!user@host.domain:/akill $address($$1,5) $$?="What is the reason for the akill?"
+  ..AKill nick!*user@host.domain:/akill $address($$1,6) $$?="What is the reason for the akill?"
+  ..AKill nick!*@host.domain:/akill $address($$1,7) $$?="What is the reason for the akill?"
+  ..AKill nick!*user@*.domain:/akill $address($$1,8) $$?="What is the reason for the akill?"
+  ..AKill nick!*@*.domain:/akill $address($$1,9) $$?="What is the reason for the akill?"
+  -
+}
+;...ChanServ:/privmsg operserv raw :chanserv
+;...OperServ:/privmsg operserv raw :operserv
+;...NickServ:/privmsg operserv raw :Nickserv
+;...MemoServ:/privmsg operserv raw :memoserv
+;...IrcIIhelp:/privmsg operserv raw :irciihelp
+;...HelpServ:/privmsg operserv raw :helpserv
+;...DevNull:/privmsg operserv raw :devnull

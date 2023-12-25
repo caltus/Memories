@@ -1,0 +1,62 @@
+%%%%%%%%%%%%%%%%%%% Thanks %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%% Updates %%%%%%%%%%%%%%%%%%%%%%%%%
+Version 1.01
+_____________________________________________________
+- Fixed Version reply
+
+
+Version 1.02
+_____________________________________________________
+- Fixed Echo in status window
+  so it doesnt say Status window
+  and then echotxt.
+
+- Added Autoaway to popups
+
+
+Version 1.02b
+_____________________________________________________
+- Added Swear Kick
+- Added Bad Nick Kick
+- Added Bad Ident Kick
+- Added Real Msging
+- Added Spy Option
+- Hexed mIRC 5.51
+- Fixed Shitlist
+- Fixed Aop
+- Fixed Avoice
+- Fixed Action
+- Fixed Topic
+- Fixed Time Joined
+- Fix Topic Sey By
+- Fixed Quit in Channel - Thanks r|dd|er
+- Fixed Nick in Channel - Thanks r|dd|er
+
+Version 2.0b3
+_____________________________________________________
+- Added CTCP Flood Protection
+- Added Msg Flood Protection
+- Added Deop Flood Protection
+- Added Kick Flood Protection
+- Added 1/2 of /names
+- Deleted Swear Kick
+- Deleted Bad Nick Kick
+- Deleted Bad Ident Kick
+- Hexed mIRC 5.6
+- Fixed Notice
+- Added Server Notice
+- Took out PING? PONG!
+- Fixed Ping
+- Added Image by D4reDevil
+
+
+Next Version 
+_____________________________________________________
+- Link Looker
+- More of /names
+- The Rest of /tog
+
+
